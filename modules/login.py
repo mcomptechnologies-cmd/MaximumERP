@@ -51,22 +51,20 @@ class LoginWindow:
         login_btn.pack(pady=30)
 
     def login(self):
+
         if self.username.get() == "admin" and self.password.get() == "admin123":
 
-            self.root.destroy()
-
-            new_root = ctk.CTk()
+            # Remove login widgets
+            for widget in self.root.winfo_children():
+                widget.destroy()
 
             from modules.dashboard import Dashboard
-
-            Dashboard(new_root)
-
-            new_root.mainloop()
+            Dashboard(self.root)
 
         else:
             messagebox.showerror(
                 "Login Failed",
                 "Incorrect username or password"
-            )  
+            )
             
     

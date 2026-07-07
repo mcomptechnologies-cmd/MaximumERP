@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from modules.inventory import InventoryPage
+from modules.inventory import Inventory
 
 
 class Dashboard:
@@ -127,6 +127,6 @@ class Dashboard:
 
         self.clear_content()
 
-        page = InventoryPage(self.content)
+        page = Inventory(self.content)
 
         page.frame.pack(fill="both", expand=True)
