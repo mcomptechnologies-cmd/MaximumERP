@@ -127,6 +127,10 @@ class Dashboard:
 
         self.clear_content()
 
+<<<<<<< HEAD
         page = Inventory(self.content)
+=======
+        page = InventoryPage(self.content)
+>>>>>>> 147c9042c4098c450cd5eb1bdadabb09ff62adea
 
         page.frame.pack(fill="both", expand=True)
