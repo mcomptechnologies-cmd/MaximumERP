@@ -1,5 +1,7 @@
 import customtkinter as ctk
 from modules.inventory import Inventory
+from modules.sales import Sales
+from database.database import db
 
 
 class Dashboard:
@@ -57,9 +59,10 @@ class Dashboard:
 
         ctk.CTkButton(
             self.sidebar,
-            text="Sales"
+            text="Sales",
+            command=self.show_sales
         ).pack(fill="x", padx=10, pady=5)
-
+        
         ctk.CTkButton(
             self.sidebar,
             text="Customers"
@@ -73,11 +76,6 @@ class Dashboard:
         ctk.CTkButton(
             self.sidebar,
             text="Reports"
-        ).pack(fill="x", padx=10, pady=5)
-
-        ctk.CTkButton(
-            self.sidebar,
-            text="Settings"
         ).pack(fill="x", padx=10, pady=5)
 
         self.show_dashboard()
@@ -100,10 +98,10 @@ class Dashboard:
         cards.pack()
 
         stats = [
-            ("Inventory", "0"),
-            ("Customers", "0"),
-            ("Sales", "KES 0"),
-            ("Repairs", "0")
+            ("Inventory", str(db.inventory_count())),
+            ("Customers", str(db.customers_count())),
+            ("Sales", f"KES {db.total_sales():,.2f}"),
+            ("Repairs", str(db.repairs_count()))
         ]
 
         for title, value in stats:
@@ -128,5 +126,14 @@ class Dashboard:
         self.clear_content()
 
         page = Inventory(self.content)
+
+        page.frame.pack(fill="both", expand=True)
+    def show_sales(self):
+
+        self.clear_content()
+
+        from modules.sales import Sales
+
+        page = Sales(self.content)
 
         page.frame.pack(fill="both", expand=True)
