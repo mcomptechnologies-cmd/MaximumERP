@@ -24,11 +24,12 @@ class Database:
         self.cursor.execute("""
         CREATE TABLE IF NOT EXISTS inventory(
             id INT AUTO_INCREMENT PRIMARY KEY,
-            product_name VARCHAR(200) NOT NULL,
+            product_name VARCHAR(200),
             category VARCHAR(100),
-            quantity INT DEFAULT 0,
-            buying_price DECIMAL(10,2) DEFAULT 0,
-            selling_price DECIMAL(10,2) DEFAULT 0
+            serial_number VARCHAR(100),
+            quantity INT,
+            buying_price DECIMAL(10,2),
+            selling_price DECIMAL(10,2)
         )
         """)
         # Customers Table
@@ -49,6 +50,15 @@ class Database:
             customer VARCHAR(200),
             sale_date DATETIME DEFAULT CURRENT_TIMESTAMP,
             total DECIMAL(10,2)
+        )
+        """)
+        # Serial Numbers Table
+        self.cursor.execute("""
+        CREATE TABLE IF NOT EXISTS serial_numbers(
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            product_id INT,
+            serial_number VARCHAR(150) UNIQUE,
+            status VARCHAR(30) DEFAULT 'In Stock'
         )
         """)
         # Repairs Table
@@ -281,6 +291,36 @@ class Database:
 
         self.conn.commit()
 
+    def get_serial_numbers(self, product_id):
+
+        print("Searching serials for product:", product_id)
+
+        sql = """
+        SELECT serial_number
+        FROM serial_numbers
+        WHERE product_id=%s
+        AND status='In Stock'
+        """
+
+        self.cursor.execute(sql, (int(product_id),))
+
+        result = self.cursor.fetchall()
+
+        print("Serials found:", result)
+
+        return result
+
+
+    def sell_serial_number(self, serial_number):
+
+        sql = """
+        UPDATE serial_numbers
+        SET status='Sold'
+        WHERE serial_number=%s
+        """
+
+        self.cursor.execute(sql, (serial_number,))
+        self.conn.commit()
 
 # ==========================================
 # DATABASE OBJECT
